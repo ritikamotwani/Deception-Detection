@@ -68,7 +68,7 @@ model = models.TfidfModel(corpus)
 corpus = [text for text in model[corpus]]
 print(len(corpus))
 if len(corpus):
-    text_matrix = gensim.matutils.corpus2dense(corpus,num_terms = len(dictionary.token2id)).Texts
+    text_matrix = gensim.matutils.corpus2dense(corpus,num_terms = len(dictionary.token2id)).T
     if PCA_Applied:
         pca = PCA(n_components=PCA_nComponents)
         text_matrix = pca.fit_transform(text_matrix)
@@ -79,16 +79,5 @@ if len(corpus):
     model = ppl.fit(sources, labels[:100])
     pred_labels = model.predict(sources_test)
     print('SVM:')
-     results = classification_report(labels[100:], pred_labels, labels=None, target_names=None, sample_weight=None, output_dict=True, digits=2)
-    print('\t Precision \t f1-score \t support\n')
-    for key, value in results.items():
-        if((key == '0') or(key == '1')):
-            print('{} \t\t{} \t\t{} \t\t{}'.format(key, round(value['precision'],2), round(value['f1-score'],2), round(value['support'],2)))
-        else:
-            total_precision += value['precision']
-            total_f1_score += value['f1-score']
-            total_support = value['support']
-            #print('{} \t{} \t\t{} \t\t{}'.format(key, round(value['precision'], 2), round(value['f1-score'], 2), round(value['support'], 2)))
-    print('{} \t{} \t\t{} \t\t{}'.format('Total/Avg', round(total_precision/3, 2), round(total_f1_score/3, 2),
-                                                   round(total_support, 2)))
-    # pprint(results)
+    print('Prediction')
+    print(classification_report(labels[100:], pred_labels))
