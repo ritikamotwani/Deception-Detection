@@ -8,6 +8,8 @@ import numpy
 from sklearn.feature_extraction.text import CountVectorizer
 import os
 from random import shuffle
+import pandas
+from sklearn import model_selection, preprocessing
 
 #create source
 sources = []
@@ -38,3 +40,16 @@ text = []
 for source in sources:
     with open(source) as f_input:
         text.append(f_input.read())
+
+# create a dataframe using texts and lables
+trainDF = pandas.DataFrame()
+trainDF['text'] = text
+trainDF['label'] = labels
+
+# split the dataset into training and validation datasets 
+train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'])
+
+# label encode the target variable 
+encoder = preprocessing.LabelEncoder()
+train_y = encoder.fit_transform(train_y)
+valid_y = encoder.fit_transform(valid_y)
