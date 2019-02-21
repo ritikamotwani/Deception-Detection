@@ -53,3 +53,11 @@ train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['t
 encoder = preprocessing.LabelEncoder()
 train_y = encoder.fit_transform(train_y)
 valid_y = encoder.fit_transform(valid_y)
+
+# create a count vectorizer object 
+count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
+count_vect.fit(trainDF['text'])
+
+# transform the training and validation data using count vectorizer object
+xtrain_count =  count_vect.transform(train_x)
+xvalid_count =  count_vect.transform(valid_x)
