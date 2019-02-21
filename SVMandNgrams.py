@@ -53,7 +53,7 @@ trainDF['text'] = text
 trainDF['label'] = labels
 
 # split the dataset into training and validation datasets 
-train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size=0.25, train_size=0.75, shuffle=False)
+train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size=0.15, random_state=0)
 
 # label encode the target variable 
 encoder = preprocessing.LabelEncoder()
@@ -81,7 +81,7 @@ xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_x)
 xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
 
 # characters level tf-idf
-tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(1,2), max_features=5000)
+tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(2,3), max_features=5000)
 tfidf_vect_ngram_chars.fit(trainDF['text'])
 xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x) 
 xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(valid_x) 
