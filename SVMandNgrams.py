@@ -75,13 +75,13 @@ xtrain_tfidf =  tfidf_vect.transform(train_x)
 xvalid_tfidf =  tfidf_vect.transform(valid_x)
 
 # ngram level tf-idf 
-tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(2,3), max_features=5000)
+tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(1,2), max_features=5000)
 tfidf_vect_ngram.fit(trainDF['text'])
 xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_x)
 xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
 
 # characters level tf-idf
-tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(2,3), max_features=5000)
+tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(1,2), max_features=5000)
 tfidf_vect_ngram_chars.fit(trainDF['text'])
 xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x) 
 xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(valid_x) 
