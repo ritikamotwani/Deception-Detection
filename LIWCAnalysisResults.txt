@@ -1,0 +1,9 @@
+5-fold cross validation
+
+Opinion Spam Dataset:
+NB = 0.68
+SVM = 0.77
+
+Real Life Dataset:
+NB = 0.53
+SVM = 0.53
