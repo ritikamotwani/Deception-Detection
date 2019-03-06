@@ -53,7 +53,7 @@ trainDF['text'] = text
 trainDF['label'] = labels
 
 # split the dataset into training and validation datasets 
-train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.05, random_state = 0)
+train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.10, random_state = 0, shuffle=False)
 
 # label encode the target variable 
 encoder = preprocessing.LabelEncoder()
@@ -80,5 +80,5 @@ def train_model(classifier, feature_vector_train, label, feature_vector_valid, i
     return accuracy_score(predictions, valid_y)
 
 # SVM on Ngram Level TF IDF Vectors
-accuracy = train_model(svm.SVC(random_state = 0), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
+accuracy = train_model(svm.SVC(kernel='linear'), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
 print("SVM, N-Gram Vectors: ", accuracy)
