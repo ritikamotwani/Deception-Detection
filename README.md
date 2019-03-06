@@ -17,12 +17,12 @@ pip install -r requirements.txt
 1. The first basic approach: The file SVM_realLife.py classifies using PCA, then SVM. 
 ```
    To execute:
-      python3 SVM.py
+      python3 SVM_realLife.py
 ```
 ![Accuracy: 67%](https://img.shields.io/badge/Accuracy-67%25-blue.svg)
 <br/>
 
-2. Using SVM with ngrams approach(bigrams and trigrams) with tf-idf on real lige trial dataset
+2. Using SVM with ngrams approach(bigrams) with tf-idf on real life trial dataset
 ```
    To execute:
       python3 SVM_nGrams_realLife.py
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 ![Accuracy: 69.23%](https://img.shields.io/badge/Accuracy-69.23%25-blue.svg)
 <br/>
 
-3.  Using SVM with ngrams approach(bigrams and trigrams) with tf-idf and removing the stop words on real life trial dataset
+3.  Using SVM with ngrams approach(bigramss) with tf-idf and removing the stop words on real life trial dataset
 ```
    To execute:
       python3 SVM_nGrams_removingStopWords_realLife.py
