@@ -6,14 +6,14 @@ Classifiers added to detect deception through transcripts.
 2. Deceptive Opinion Spam Corpus v1.4 (https://myleott.com/op-spam.html)
 
 ## Installation
-</br>
+
 Run the following command to install all python packages that'll be used in the project:
 ```
 pip install -r requirements.txt
 ```
-</br>
+
 ## Approaches
-</br>
+
 1. The first basic approach: The file SVM_realLife.py classifies using PCA, then SVM. 
 ```
    To execute:
