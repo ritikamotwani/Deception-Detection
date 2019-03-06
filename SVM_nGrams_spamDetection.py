@@ -53,29 +53,15 @@ trainDF['text'] = text
 trainDF['label'] = labels
 
 # split the dataset into training and validation datasets 
-train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.1, random_state = 0)
+train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.05, random_state = 0)
 
 # label encode the target variable 
 encoder = preprocessing.LabelEncoder()
 train_y = encoder.fit_transform(train_y)
 valid_y = encoder.fit_transform(valid_y)
 
-# create a count vectorizer object 
-count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
-count_vect.fit(trainDF['text'])
-
-# transform the training and validation data using count vectorizer object
-xtrain_count =  count_vect.transform(train_x)
-xvalid_count =  count_vect.transform(valid_x)
-
-# word level tf-idf
-tfidf_vect = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', max_features=50)
-tfidf_vect.fit(trainDF['text'])
-xtrain_tfidf =  tfidf_vect.transform(train_x)
-xvalid_tfidf =  tfidf_vect.transform(valid_x)
-
 # ngram level tf-idf 
-tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(1,2), max_features=24)
+tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(1,2), lowercase=True)
 tfidf_vect_ngram.fit(trainDF['text'])
 xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_x)
 xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
