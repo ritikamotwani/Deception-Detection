@@ -78,6 +78,7 @@ pip install -r requirements.txt
 On Deceptive Opinion Spam data:
 ![Accuracy: 77%](https://img.shields.io/badge/Accuracy-75.9%25-blue.svg)
 On RealLifeTrial data:
+<br/>
 ![Accuracy: 53%](https://img.shields.io/badge/Accuracy-75.9%25-blue.svg)
 
 <br/>
