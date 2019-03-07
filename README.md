@@ -69,3 +69,15 @@ pip install -r requirements.txt
 ```
 ![Accuracy: 75.9%](https://img.shields.io/badge/Accuracy-75.9%25-blue.svg)
 <br/>
+
+8. Classification based on LIWC Analysis output (.csv) using Naive-Bayes and SVM classifiers. Results in LIWCAnalysisResults.txt.
+```
+   To execute:
+      python3 LIWCClassify.py
+```
+On Deceptive Opinion Spam data:
+![Accuracy: 77%](https://img.shields.io/badge/Accuracy-75.9%25-blue.svg)
+On RealLifeTrial data:
+![Accuracy: 53%](https://img.shields.io/badge/Accuracy-75.9%25-blue.svg)
+
+<br/>
