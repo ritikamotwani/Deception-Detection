@@ -1,8 +1,13 @@
 5-fold cross validation
 
 Opinion Spam Dataset:
+LIWC 2015 dictionary-
 NB = 0.68
 SVM = 0.77
+
+LIWC 2001 dictionary-
+NB = 0.705
+SVM = 0.787
 
 Real Life Dataset:
 NB = 0.53
