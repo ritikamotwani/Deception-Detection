@@ -21,7 +21,7 @@ from sklearn.naive_bayes import GaussianNB
 sources = []
 labels = []
 
-trainingPath = './dataset/TrainingSet/'
+trainingPath = './Real_Life_Trial_Data/'
 for home, dirs, files in os.walk(trainingPath+'Deceptive'):
     for filename in files:
         sources.append(home+'/'+filename)
@@ -32,16 +32,6 @@ for home, dirs, files in os.walk(trainingPath+'Truthful'):
         sources.append(home + '/' + filename)
         labels.append(0)
 
-testPath = './dataset/TestingSet/'
-for home, dirs, files in os.walk(testPath + 'Deceptive'):
-    for filename in files:
-        sources.append(home + '/' + filename)
-        labels.append(1)
-
-for home, dirs, files in os.walk(testPath + 'Truthful'):
-    for filename in files:
-        sources.append(home + '/' + filename)
-        labels.append(0)
 text = []
 for source in sources:
     with open(source) as f_input:

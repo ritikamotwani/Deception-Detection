@@ -53,7 +53,7 @@ trainDF['text'] = text
 trainDF['label'] = labels
 
 # split the dataset into training and validation datasets 
-train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.10, random_state = 0, shuffle=False)
+train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.10, random_state = 0)
 
 # label encode the target variable 
 encoder = preprocessing.LabelEncoder()
