@@ -1,7 +1,6 @@
 import os, string, glob
 import pandas as pd
 import numpy as np
-import itertools
 from random import shuffle
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn import model_selection, preprocessing, naive_bayes
@@ -14,48 +13,29 @@ from sklearn.model_selection import cross_validate
 from sklearn.model_selection import KFold
 from scipy.sparse import csr_matrix
 from statistics import mean
+from utilities import *
 
 sources = [[] for i in range(4)]
 
 # for infile in glob.glob(datapath+'deceptive_neg/*.txt'):
 
 datapath='./Spam_Detection_Data/'
-for home, dirs, files in os.walk(datapath+'deceptive_neg'):
-    for filename in files:
-        sources[0].append(home+'/'+filename)
+sources = [[] for i in range(4)]
 
-sources[0]=sorted(sources[0])
+read_fileNames(sources[0], datapath,'deceptive_neg')
+read_fileNames(sources[1], datapath,'truthful_neg')
+read_fileNames(sources[2], datapath,'deceptive_pos')
+read_fileNames(sources[3], datapath,'truthful_pos')
 
-for home, dirs, files in os.walk(datapath+'truthful_neg'):
-    for filename in files:
-        sources[1].append(home+'/'+filename)
-
-sources[1]=sorted(sources[1])
-
-for home, dirs, files in os.walk(datapath+'deceptive_pos'):
-    for filename in files:
-        sources[2].append(home+'/'+filename)
-
-sources[2]=sorted(sources[2])
-
-for home, dirs, files in os.walk(datapath+'truthful_pos'):
-    for filename in files:
-        sources[3].append(home+'/'+filename)
-
-sources[3]=sorted(sources[3])
+sort_Lists(sources,len(sources))
 
 df=[]
-df.append(pd.read_csv(datapath+'LIWC_Negative_Deceptive.csv'))
-df[0] = df[0].sort_values(by=['Filename'])
 
-df.append(pd.read_csv(datapath+'LIWC_Negative_Truthful.csv'))
-df[1] = df[1].sort_values(by=['Filename'])
+read_sort_CSV(df, datapath, 'LIWC_Negative_Deceptive.csv','Filename')
+read_sort_CSV(df, datapath, 'LIWC_Negative_Truthful.csv','Filename')
+read_sort_CSV(df, datapath, 'LIWC_Positive_Deceptive.csv','Filename')
+read_sort_CSV(df, datapath, 'LIWC_Positive_Truthful.csv','Filename')
 
-df.append(pd.read_csv(datapath+'LIWC_Positive_Deceptive.csv'))
-df[2] = df[2].sort_values(by=['Filename'])
-
-df.append(pd.read_csv(datapath+'LIWC_Positive_Truthful.csv'))
-df[3] = df[3].sort_values(by=['Filename'])
 
 dfLIWC=pd.concat((df[0],df[1],df[2],df[3])).iloc[:,2:]
 
@@ -63,10 +43,7 @@ labels=np.empty((len(sources)*len(sources[0])),dtype=int)
 np.concatenate((np.ones((400),dtype=int),np.zeros((400),dtype=int),np.ones((400),dtype=int),np.zeros((400),dtype=int)),out=labels)
 
 text=[]
-for source in list(itertools.chain.from_iterable(sources)):
-        with open(source) as f_input:
-                text.append(f_input.read())
-
+readFilesFromSources(text,sources)
 
 # print(np.concatenate((np.column_stack((sources,labels)),X),axis=1))
 
