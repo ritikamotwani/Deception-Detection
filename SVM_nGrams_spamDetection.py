@@ -17,6 +17,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold 
+from sklearn.ensemble import RandomForestClassifier
 
 #Defining Variables
 sources = []
@@ -50,6 +51,7 @@ def read_file():
         with open(source) as f_input:
             text.append(f_input.read())
 
+#Creating the train test split and transforming data
 def create_train_test_set():
     # create a dataframe using texts and lables
     trainDF = pandas.DataFrame()
@@ -57,7 +59,7 @@ def create_train_test_set():
     trainDF['label'] = labels
 
     # split the dataset into training and validation datasets 
-    train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.10, random_state = 0, shuffle=False)
+    train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.10, random_state = 0, shuffle=True)
 
     # label encode the target variable 
     encoder = preprocessing.LabelEncoder()
@@ -71,6 +73,7 @@ def create_train_test_set():
     xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
     return xtrain_tfidf_ngram, xvalid_tfidf_ngram, train_y, valid_y
 
+#Classifier
 def train_model(classifier, feature_vector_train, label, feature_vector_valid, valid_y):
     # fit the training dataset on the classifier
     classifier.fit(feature_vector_train, label)
@@ -82,5 +85,11 @@ def train_model(classifier, feature_vector_train, label, feature_vector_valid, v
 # SVM on Ngram Level TF IDF Vectors
 read_file()
 xtrain_tfidf_ngram, xvalid_tfidf_ngram, train_y, valid_y = create_train_test_set()
-accuracy = train_model(svm.SVC(kernel='linear'), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
-print("SVM, N-Gram Vectors: ", accuracy)
+accuracy_SVM = train_model(svm.SVC(kernel='linear'), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+accuracy_RF = train_model(RandomForestClassifier(n_estimators=2, random_state=0, max_features='auto', min_samples_split=2), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+accuracy_NB = train_model(naive_bayes.MultinomialNB(alpha=0, class_prior=None, fit_prior=False), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+print('\n')
+print('The accuracy for the classifiers SVM, Naives Bayes, Random Forest are: ')
+print("1. SVM, N-Gram Vectors: ", accuracy_SVM)
+print("2. Random Forest, N-Gram Vectors: ", accuracy_RF)
+print("3. Naive Bayes, N-Gram Vectors: ", accuracy_NB)
