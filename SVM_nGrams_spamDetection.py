@@ -17,68 +17,79 @@ from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold 
+from sklearn.ensemble import RandomForestClassifier
 
-#create source
+#Defining Variables
 sources = []
 labels = []
-
-trainingPath = './dataset1/'
-for home, dirs, files in os.walk(trainingPath+'deceptive1'):
-    for filename in files:
-        sources.append(home+'/'+filename)
-        labels.append(1)
-
-for home, dirs, files in os.walk(trainingPath+'deceptive2'):
-    for filename in files:
-        sources.append(home+'/'+filename)
-        labels.append(1)
-
-for home, dirs, files in os.walk(trainingPath+'truthful1'):
-    for filename in files:
-        sources.append(home+'/'+filename)
-        labels.append(0)
-
-for home, dirs, files in os.walk(trainingPath+'truthful2'):
-    for filename in files:
-        sources.append(home + '/' + filename)
-        labels.append(0)
-
 text = []
-for source in sources:
-    with open(source) as f_input:
-        text.append(f_input.read())
-# create a dataframe using texts and lables
-trainDF = pandas.DataFrame()
-trainDF['text'] = text
-trainDF['label'] = labels
 
-# split the dataset into training and validation datasets 
-train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.10, random_state = 0)
+# Reading and storing dataset
+def read_file():
+    trainingPath = './Spam_Detection_Data/'
+    for home, dirs, files in os.walk(trainingPath+'deceptive_neg'):
+        for filename in files:
+            sources.append(home+'/'+filename)
+            labels.append(1)
 
-# label encode the target variable 
-encoder = preprocessing.LabelEncoder()
-train_y = encoder.fit_transform(train_y)
-valid_y = encoder.fit_transform(valid_y)
+    for home, dirs, files in os.walk(trainingPath+'deceptive_pos'):
+        for filename in files:
+            sources.append(home+'/'+filename)
+            labels.append(1)
 
-# ngram level tf-idf 
-tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(1,2), lowercase=True)
-tfidf_vect_ngram.fit(trainDF['text'])
-xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_x)
-xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
+    for home, dirs, files in os.walk(trainingPath+'truthful_neg'):
+        for filename in files:
+            sources.append(home+'/'+filename)
+            labels.append(0)
 
+    for home, dirs, files in os.walk(trainingPath+'truthful_pos'):
+        for filename in files:
+            sources.append(home + '/' + filename)
+            labels.append(0)
 
-def train_model(classifier, feature_vector_train, label, feature_vector_valid, is_neural_net=False):
+    for source in sources:
+        with open(source) as f_input:
+            text.append(f_input.read())
+
+#Creating the train test split and transforming data
+def create_train_test_set():
+    # create a dataframe using texts and lables
+    trainDF = pandas.DataFrame()
+    trainDF['text'] = text
+    trainDF['label'] = labels
+
+    # split the dataset into training and validation datasets 
+    train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size = 0.10, random_state = 0, shuffle=True)
+
+    # label encode the target variable 
+    encoder = preprocessing.LabelEncoder()
+    train_y = encoder.fit_transform(train_y)
+    valid_y = encoder.fit_transform(valid_y)
+
+    # ngram level tf-idf 
+    tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(1,2), lowercase=True)
+    tfidf_vect_ngram.fit(trainDF['text'])
+    xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_x)
+    xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
+    return xtrain_tfidf_ngram, xvalid_tfidf_ngram, train_y, valid_y
+
+#Classifier
+def train_model(classifier, feature_vector_train, label, feature_vector_valid, valid_y):
     # fit the training dataset on the classifier
     classifier.fit(feature_vector_train, label)
     
     # predict the labels on validation dataset
     predictions = classifier.predict(feature_vector_valid)
-    
-    if is_neural_net:
-        predictions = predictions.argmax(axis=-1)
-    
     return accuracy_score(predictions, valid_y)
 
 # SVM on Ngram Level TF IDF Vectors
-accuracy = train_model(svm.SVC(kernel='linear'), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
-print("SVM, N-Gram Vectors: ", accuracy)
+read_file()
+xtrain_tfidf_ngram, xvalid_tfidf_ngram, train_y, valid_y = create_train_test_set()
+accuracy_SVM = train_model(svm.SVC(kernel='linear'), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+accuracy_RF = train_model(RandomForestClassifier(n_estimators=2, random_state=0, max_features='auto', min_samples_split=2), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+accuracy_NB = train_model(naive_bayes.MultinomialNB(alpha=0, class_prior=None, fit_prior=False), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+print('\n')
+print('The accuracy for the classifiers SVM, Naives Bayes, Random Forest are: ')
+print("1. SVM, N-Gram Vectors: ", accuracy_SVM)
+print("2. Random Forest, N-Gram Vectors: ", accuracy_RF)
+print("3. Naive Bayes, N-Gram Vectors: ", accuracy_NB)
