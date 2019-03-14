@@ -1,59 +1,39 @@
-# gensim modules
-import gensim
-from gensim import utils
-from gensim import corpora,models
-# numpy
-import numpy
-# classifier
+import os,string
+import numpy as np
+import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-import os
-from random import shuffle
-import pandas
 from sklearn import model_selection, preprocessing, naive_bayes
-import string
-from sklearn.decomposition import LatentDirichletAllocation
-from sklearn import svm
 from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
+from scipy.sparse import csr_matrix
+from utilities import read_fileNames, readFilesFromSources, train_model
 
 
 #create source
 sources = []
-labels = []
+datapath = './Real_Life_Trial_Data/'
 
-trainingPath = './dataset/TrainingSet/'
-for home, dirs, files in os.walk(trainingPath+'Deceptive'):
-    for filename in files:
-        sources.append(home+'/'+filename)
-        labels.append(1)
+#read file names from datapath
+read_fileNames(sources, datapath,'Deceptive')
+deceptiveCount=len(sources)
+read_fileNames(sources, datapath,'Truthful')
+truthCount=len(sources)-deceptiveCount
 
-for home, dirs, files in os.walk(trainingPath+'Truthful'):
-    for filename in files:
-        sources.append(home + '/' + filename)
-        labels.append(0)
-
-testPath = './dataset/TestingSet/'
-for home, dirs, files in os.walk(testPath + 'Deceptive'):
-    for filename in files:
-        sources.append(home + '/' + filename)
-        labels.append(1)
-
-for home, dirs, files in os.walk(testPath + 'Truthful'):
-    for filename in files:
-        sources.append(home + '/' + filename)
-        labels.append(0)
+#read text files from source list
 text = []
-for source in sources:
-    with open(source) as f_input:
-        text.append(f_input.read())
+readFilesFromSources(text,sources)
+
+#create label array corresponding to text files
+labels=np.empty(len(sources))
+np.concatenate((np.ones(deceptiveCount, dtype=int),np.zeros(truthCount, dtype=int)),out=labels)
 
 # create a dataframe using texts and lables
-trainDF = pandas.DataFrame()
+trainDF = pd.DataFrame()
 trainDF['text'] = text
 trainDF['label'] = labels
 
 # split the dataset into training and validation datasets 
-train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size=0.25, train_size=0.75, shuffle=False)
+train_x, valid_x, train_y, valid_y = model_selection.train_test_split(trainDF['text'], trainDF['label'], test_size=0.15, random_state=0)
 
 # label encode the target variable 
 encoder = preprocessing.LabelEncoder()
@@ -86,31 +66,18 @@ tfidf_vect_ngram_chars.fit(trainDF['text'])
 xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x) 
 xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(valid_x) 
 
-
-def train_model(classifier, feature_vector_train, label, feature_vector_valid, is_neural_net=False):
-    # fit the training dataset on the classifier
-    classifier.fit(feature_vector_train, label)
-    
-    # predict the labels on validation dataset
-    predictions = classifier.predict(feature_vector_valid)
-    
-    if is_neural_net:
-        predictions = predictions.argmax(axis=-1)
-    
-    return accuracy_score(predictions, valid_y)
-
 # Naive Bayes on Count Vectors
-accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count)
-print("NB, Count Vectors: ", accuracy)
+result = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count, valid_y)
+print("NB, Count Vectors: Accuracy=%.3f\tF1=%.3f"%(result['accuracy'],result['f1']))
 
 # Naive Bayes on Word Level TF IDF Vectors
-accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf, train_y, xvalid_tfidf)
-print("NB, WordLevel TF-IDF: ", accuracy)
+result = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf, train_y, xvalid_tfidf, valid_y)
+print("NB, WordLevel TF-IDF: Accuracy=%.3f\tF1=%.3f"%(result['accuracy'],result['f1']))
 
 # Naive Bayes on Ngram Level TF IDF Vectors
-accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
-print("NB, N-Gram Vectors: ", accuracy)
+result = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+print("NB, N-Gram Vectors: Accuracy=%.3f\tF1=%.3f"%(result['accuracy'],result['f1']))
 
 # Naive Bayes on Character Level TF IDF Vectors
-accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)
-print("NB, CharLevel Vectors: ", accuracy)
+result = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars, valid_y)
+print("NB, CharLevel Vectors: Accuracy=%.3f\tF1=%.3f"%(result['accuracy'],result['f1']))

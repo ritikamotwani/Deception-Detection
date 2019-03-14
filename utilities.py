@@ -4,6 +4,7 @@ import numpy as np
 import itertools
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 def read_fileNames(src, datapath, subfolder=None):
     for home, dirs, files in os.walk(datapath+subfolder):
@@ -26,11 +27,18 @@ def readFilesFromSources(text, sources):
         with open(source) as f_input:
             text.append(f_input.read())
 
-def train_model(classifier, feature_vector_train, train_label, feature_vector_valid, valid_label):
-        # fit the training dataset on the classifier
-        classifier.fit(feature_vector_train, train_label)
-        
-        # predict the labels on validation dataset
-        predictions = classifier.predict(feature_vector_valid)
+def ngram_transform(train_txt, valid_txt, n, stopwords, max_Features):
+    tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(1,n), lowercase=True, stop_words=stopwords, max_features=max_Features)
+    tfidf_vect_ngram.fit(train_txt)
+    xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_txt)
+    xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_txt)
+    return xtrain_tfidf_ngram, xvalid_tfidf_ngram
 
-        return {'accuracy':accuracy_score(predictions, valid_label),'f1':f1_score(predictions, valid_label)}
+def train_model(classifier, feature_vector_train, train_label, feature_vector_valid, valid_label):
+    # fit the training dataset on the classifier
+    classifier.fit(feature_vector_train, train_label)
+        
+    # predict the labels on validation dataset
+    predictions = classifier.predict(feature_vector_valid)
+
+    return {'accuracy':accuracy_score(predictions, valid_label),'f1':f1_score(predictions, valid_label)}

@@ -2,12 +2,9 @@ import os, string, glob
 import pandas as pd
 import numpy as np
 from random import shuffle
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn import model_selection, preprocessing, naive_bayes
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn import svm
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import f1_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import KFold
@@ -56,13 +53,9 @@ labels=encoder.fit_transform(labels)
 #train-test split
 train_txt, valid_txt, train_LIWC, valid_LIWC, train_labels, valid_labels= model_selection.train_test_split(text, dfLIWC, labels, test_size = 0.10, random_state = 0)
 
-# for i in range(1690,1695,1):
 i=1692
 print("Max features = %d\n"%i)
-tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(1,2), lowercase=True, stop_words=stopwords, max_features=i)
-tfidf_vect_ngram.fit(train_txt)
-xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_txt)
-xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_txt)
+xtrain_tfidf_ngram, xvalid_tfidf_ngram = ngram_transform(train_txt, valid_txt, 2, stopwords, i)
 
 train_X=np.empty((len(train_txt),i+93))
 # print(xtrain_tfidf_ngram.todense().shape)
