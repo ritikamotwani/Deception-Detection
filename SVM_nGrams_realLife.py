@@ -1,9 +1,5 @@
-# gensim modules
-import gensim
-from gensim import utils
-from gensim import corpora,models
 # numpy
-import numpy
+import numpy as np
 # classifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 import os
@@ -15,33 +11,27 @@ from sklearn.decomposition import LatentDirichletAllocation
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
-
+from utilities import read_fileNames, readFilesFromSources, train_model
 
 #create source
 sources = []
-labels = []
 
-trainingPath = './Real_Life_Trial_Data/'
-for home, dirs, files in os.walk(trainingPath+'Deceptive'):
-    for filename in files:
-        sources.append(home+'/'+filename)
-        labels.append(1)
+datapath = './Real_Life_Trial_Data/'
 
-for home, dirs, files in os.walk(trainingPath+'Truthful'):
-    for filename in files:
-        sources.append(home + '/' + filename)
-        labels.append(0)
+#read file names from datapath
+read_fileNames(sources, datapath,'Deceptive')
+deceptiveCount=len(sources)
+read_fileNames(sources, datapath,'Truthful')
+truthCount=len(sources)-deceptiveCount
 
+#read text files from source list
 text = []
-for source in sources:
-    with open(source) as f_input:
-        text.append(f_input.read())
+readFilesFromSources(text,sources)
 
-# create a dataframe using texts and lables
-text = []
-for source in sources:
-    with open(source) as f_input:
-        text.append(f_input.read())
+#create label array corresponding to text files
+labels=np.empty(len(sources))
+np.concatenate((np.ones(deceptiveCount, dtype=int),np.zeros(truthCount, dtype=int)),out=labels)
+
 # create a dataframe using texts and lables
 trainDF = pandas.DataFrame()
 trainDF['text'] = text
@@ -61,20 +51,7 @@ tfidf_vect_ngram.fit(trainDF['text'])
 xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_x)
 xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
 
-
-def train_model(classifier, feature_vector_train, label, feature_vector_valid, is_neural_net=False):
-    # fit the training dataset on the classifier
-    classifier.fit(feature_vector_train, label)
-    
-    # predict the labels on validation dataset
-    predictions = classifier.predict(feature_vector_valid)
-    
-    if is_neural_net:
-        predictions = predictions.argmax(axis=-1)
-    
-    return accuracy_score(predictions, valid_y)
-
 # SVM on Ngram Level TF IDF Vectors
-accuracy = train_model(svm.SVC(kernel='linear'), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
-print("SVM, N-Gram Vectors: ", accuracy)
+result = train_model(svm.SVC(kernel='linear'), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+print("Accuracy score = %.3f\nF1 score = %.3f"%(result['accuracy'],result['f1']))
 

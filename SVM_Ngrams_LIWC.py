@@ -83,15 +83,6 @@ clf=svm.SVC(kernel='linear')
 # avgAcc=mean(score['test_accuracy'])
 # print("Overall F1 = %.3f\nAccuracy = %.3f\n"%(avgF1,avgAcc))
 
-def train_model(classifier, feature_vector_train, train_label, feature_vector_valid, valid_label):
-        # fit the training dataset on the classifier
-        classifier.fit(feature_vector_train, train_label)
-        
-        # predict the labels on validation dataset
-        predictions = classifier.predict(feature_vector_valid)
-
-        return {'accuracy':accuracy_score(predictions, valid_label),'f1':f1_score(predictions, valid_label)}
-
 # SVM on Ngram Level TF IDF Vectors
 print("Classifying test data using SVM...")
 result = train_model(clf, train_X, train_labels, valid_X, valid_labels)
