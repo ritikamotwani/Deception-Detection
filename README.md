@@ -30,7 +30,7 @@ pip install -r requirements.txt
 ![Accuracy: 69.23%](https://img.shields.io/badge/Accuracy-69.23%25-blue.svg)
 <br/>
 
-3.  Using SVM with ngrams approach(bigramss) with tf-idf and removing the stop words on real life trial dataset
+3.  Using SVM with ngrams approach(bigrams) with tf-idf and removing the stop words on real life trial dataset
 ```
    To execute:
       python3 SVM_nGrams_removingStopWords_realLife.py
@@ -81,3 +81,15 @@ pip install -r requirements.txt
 ![Accuracy: 53%](https://img.shields.io/badge/Accuracy-53%25-blue.svg)  On RealLifeTrial data
 
 <br/>
+9. SVM classification based on LIWC + Ngram features (bigrams used here). K-fold cross validation performed shows generality of spam dataset.
+```
+   To execute:
+      python3 SVM_Ngrams_LIWC.py
+```
+
+![Accuracy: 84%](https://img.shields.io/badge/Accuracy-84%-blue.svg)  On Deceptive Opinion Spam data
+<br/>
+10. Utilities file: defines various useful functions for input and feature extraction.
+```
+   utilities.py
+```
