@@ -12,9 +12,9 @@ from scipy.sparse import csr_matrix
 from statistics import mean
 from utilities import *
 
-sources = [[] for i in range(4)]
+#--------------------------------opinion Spam Data----------------------------------------------------------------------------------------------
 
-# for infile in glob.glob(datapath+'deceptive_neg/*.txt'):
+sources = [[] for i in range(4)]
 
 datapath='./Spam_Detection_Data/'
 sources = [[] for i in range(4)]
@@ -39,14 +39,40 @@ dfLIWC=pd.concat((df[0],df[1],df[2],df[3])).iloc[:,2:]
 labels=np.empty((len(sources)*len(sources[0])),dtype=int)
 np.concatenate((np.ones((400),dtype=int),np.zeros((400),dtype=int),np.ones((400),dtype=int),np.zeros((400),dtype=int)),out=labels)
 
+#--------------------------------Real-Life Data----------------------------------------------------------------------------------------------
+
+# #create source
+# sources = []
+# datapath = './Real_Life_Trial_Data/'
+
+# #read file names from datapath
+# read_fileNames(sources, datapath,'Deceptive')
+# deceptiveCount=len(sources)
+# read_fileNames(sources, datapath,'Truthful')
+# truthCount=len(sources)-deceptiveCount
+
+# #read LIWC output CSV files
+# df=[]
+# read_sort_CSV(df, datapath, 'LIWC2015_Deceptive.csv','Filename')
+# read_sort_CSV(df, datapath, 'LIWC2015_Truthful.csv','Filename')
+
+# dfLIWC=pd.concat((df[0],df[1])).iloc[:,2:]
+
+# #create label array corresponding to text files
+# labels=np.empty(len(sources))
+# np.concatenate((np.ones(deceptiveCount, dtype=int),np.zeros(truthCount, dtype=int)),out=labels)
+
+#--------------------------------------------------------------------------------------------------------------------------------------------
+
+#read text files from source list
 text=[]
 readFilesFromSources(text,sources)
 
-# print(np.concatenate((np.column_stack((sources,labels)),X),axis=1))
-
+#read stopwords file
 with open('./stopwords.txt') as f_stop:
         stopwords=f_stop.read().splitlines()
 
+#encode Deceptive/Truthful Class labels
 encoder = preprocessing.LabelEncoder()
 labels=encoder.fit_transform(labels)
 
@@ -55,14 +81,12 @@ train_txt, valid_txt, train_LIWC, valid_LIWC, train_labels, valid_labels= model_
 
 i=1692
 print("Max features = %d\n"%i)
-xtrain_tfidf_ngram, xvalid_tfidf_ngram = ngram_transform(train_txt, valid_txt, 2, stopwords, i)
+#extract N-gram features from text
+xtrain_tfidf_ngram, xvalid_tfidf_ngram = ngram_transform(train_txt, valid_txt, 2, stopwords,i)
 
-train_X=np.empty((len(train_txt),i+93))
-# print(xtrain_tfidf_ngram.todense().shape)
-np.concatenate((xtrain_tfidf_ngram.todense(),train_LIWC),axis=1,out=train_X)
-
-valid_X=np.empty((len(valid_txt),i+93))
-np.concatenate((xvalid_tfidf_ngram.todense(),valid_LIWC),axis=1,out=valid_X)
+#concatenate N-gram features with LIWC features
+train_X=np.concatenate((xtrain_tfidf_ngram.todense(),train_LIWC),axis=1)
+valid_X=np.concatenate((xvalid_tfidf_ngram.todense(),valid_LIWC),axis=1)
 
 clf=svm.SVC(kernel='linear')
 
@@ -76,7 +100,7 @@ clf=svm.SVC(kernel='linear')
 # avgAcc=mean(score['test_accuracy'])
 # print("Overall F1 = %.3f\nAccuracy = %.3f\n"%(avgF1,avgAcc))
 
-# SVM on Ngram Level TF IDF Vectors
+# Final classification
 print("Classifying test data using SVM...")
 result = train_model(clf, train_X, train_labels, valid_X, valid_labels)
 print("Accuracy score = %.3f\nF1 score = %.3f"%(result['accuracy'],result['f1']))
