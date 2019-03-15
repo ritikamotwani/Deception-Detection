@@ -82,11 +82,9 @@ pip install -r requirements.txt
 
 <br/>
 <br/>
-9. SVM classification based on LIWC + Ngram features (bigrams used here). K-fold cross validation performed shows generality of spam dataset.
-```
-   To execute:
-      python3 SVM_Ngrams_LIWC.py
-```
+9. SVM classification based on LIWC + Ngram features (bigrams used here). K-fold cross validation performed shows generality of spam dataset
+
+<br/>
 
 ![Accuracy: 84%](https://img.shields.io/badge/Accuracy-84%25-blue.svg)  On Deceptive Opinion Spam data
 <br/>
