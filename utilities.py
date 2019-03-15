@@ -27,7 +27,7 @@ def readFilesFromSources(text, sources):
         with open(source) as f_input:
             text.append(f_input.read())
 
-def ngram_transform(train_txt, valid_txt, n, stopwords, max_Features):
+def ngram_transform(train_txt, valid_txt, n, stopwords=None, max_Features=None):
     tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(1,n), lowercase=True, stop_words=stopwords, max_features=max_Features)
     tfidf_vect_ngram.fit(train_txt)
     xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_txt)
