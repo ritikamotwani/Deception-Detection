@@ -76,9 +76,9 @@ pip install -r requirements.txt
       python3 LIWCClassify.py
 ```
 
-![Accuracy: 77%](https://img.shields.io/badge/Accuracy-77%25-blue.svg)  On Deceptive Opinion Spam data
+![Accuracy: 79%](https://img.shields.io/badge/Accuracy-79%25-blue.svg)  On Deceptive Opinion Spam data
 <br/>
-![Accuracy: 53%](https://img.shields.io/badge/Accuracy-53%25-blue.svg)  On RealLifeTrial data
+![Accuracy: 58%](https://img.shields.io/badge/Accuracy-58%25-blue.svg)  On RealLifeTrial data
 
 <br/>
 <br/>
