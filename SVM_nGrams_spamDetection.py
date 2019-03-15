@@ -45,7 +45,6 @@ def create_train_test_set():
 
     # ngram level tf-idf
     xtrain_tfidf_ngram, xvalid_tfidf_ngram = ngram_transform(train_x, valid_x, n=2)
-    print(xtrain_tfidf_ngram.shape,xvalid_tfidf_ngram.shape)
     return xtrain_tfidf_ngram, xvalid_tfidf_ngram, train_y, valid_y
 
 

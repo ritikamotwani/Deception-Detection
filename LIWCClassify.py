@@ -4,35 +4,41 @@ from sklearn import model_selection
 from sklearn.model_selection import KFold
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
-# from sklearn.neighbors import KNeighborsClassifier
-# from sklearn.linear_model import LogisticRegression
-import random
-import operator
+from utilities import train_model
 
+#Read LIWC output file
 
-# df = pd.read_csv("./LIWC_output_data/LIWC_All.csv")
-df = pd.read_csv("./LIWC_output_data/LIWC_RealLife.csv")
-X=df.iloc[:,1:]
-# print(X)
-kf=KFold(n_splits=5,shuffle=True,random_state=0)
-netAccuracy1=0
-netAccuracy2=0
+df = pd.read_csv("./LIWC_output_data/LIWC2015_AllReviews.csv")
+# df = pd.read_csv("./LIWC_output_data/LIWC_RealLife.csv")
+
+#split training and testing data
+x_train, x_test, y_train, y_test = model_selection.train_test_split(df.iloc[:,2:-1],df.iloc[:,-1], test_size=0.15, random_state=0)
+
+# Define classifiers
 classifier1=GaussianNB()
 classifier2=SVC(kernel='linear')
+
+#K-Fold cross validation on training set
+k=5
+kf=KFold(n_splits=k,shuffle=True,random_state=0)
+print("K-Fold cross validation (K=%d)"%k)
 i=1
-for train_index, test_index in kf.split(X):
-    print("Fold ",i)
+for train_index, valid_index in kf.split(x_train):
+    print("\nFold ",i)
     i+=1
-    training_data,test_data=X.iloc[train_index],X.iloc[test_index]
-    expected_labels = test_data.iloc[:,-1]
+    training_data,valid_data=x_train.iloc[train_index],x_train.iloc[valid_index]
+    expected_labels = y_train.iloc[valid_index]
 
-    classifier1.fit(training_data.iloc[:,:-1], training_data.iloc[:,-1])
-    classifier2.fit(training_data.iloc[:,:-1], training_data.iloc[:,-1])
+    result1=train_model(classifier1,training_data,y_train.iloc[train_index], valid_data, expected_labels)
+    print("NB result : ",result1)
 
-    accuracy1 = classifier1.score(test_data.iloc[:,:-1], expected_labels)
-    print("NB accuracy = %.3f"%accuracy1)
-    accuracy2 = classifier2.score(test_data.iloc[:,:-1], expected_labels)
-    print("SVM accuracy = %.3f"%accuracy2)
-    netAccuracy1+=accuracy1
-    netAccuracy2+=accuracy2
-print("Overall accuracy:\nNB = %.3f\nSVM = %.3f"%(netAccuracy1/5,netAccuracy2/5))
+    result2=train_model(classifier2,training_data,y_train.iloc[train_index], valid_data, expected_labels)   
+    print("SVM result : ",result2)
+
+
+#Final classification
+print("Train-test classification...\n")
+result1=train_model(classifier1,x_train, y_train, x_test, y_test)
+print("NB result : ",result1)
+result2=train_model(classifier2,x_train, y_train, x_test, y_test)
+print("SVM result : ",result2)
