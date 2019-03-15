@@ -89,6 +89,7 @@ pip install -r requirements.txt
 
 ![Accuracy: 84%](https://img.shields.io/badge/Accuracy-84%-blue.svg)  On Deceptive Opinion Spam data
 <br/>
+<br/>
 10. Utilities file: defines various useful functions for input and feature extraction.
 ```
    utilities.py
