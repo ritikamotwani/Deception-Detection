@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ### Opinion Spam Dataset:
 
-<b>Folder: OpinionSpam</b>
+<b><u>Folder: OpinionSpam</u></b>
 
 1. Parameters: NGram Approach 
 Classifiers: SVM, NB, Random Forest 
@@ -88,7 +88,8 @@ Random Forest
 ![Accuracy: 71%](https://img.shields.io/badge/Accuracy-71%25-blue.svg)
 <br/>
 
-<b>Folder: RealLife</b>
+### Real Life Dataset
+<b><u>Folder: RealLife</u></b>
 
 1. Classifiers: SVM, NB
 ```
