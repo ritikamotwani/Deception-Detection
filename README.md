@@ -38,10 +38,10 @@ pip install -r requirements.txt
 ![Accuracy: 68.4%](https://img.shields.io/badge/Accuracy-68.4%25-blue.svg)
 <br/>
 
-4. SVM with the parameters - tf-idf and bigrams on spam detection dataset
+4. SVM, NB, Random forest classifications with the parameters - tf-idf and bigrams on spam detection dataset
 ```
    To execute:
-      python3 SVM_nGrams_spamDetection.py
+      python3 Ngrams_And_Classifiers.py
 ```
 ![Accuracy: 86.8%](https://img.shields.io/badge/Accuracy-86.8%25-blue.svg)
 <br/>
