@@ -25,6 +25,7 @@ Folder: OpinionSpam
 ```
 SVM
 ![Accuracy: 91.25%](https://img.shields.io/badge/Accuracy-91.25%25-blue.svg)
+<br/>
 ![F1Score: 90.27%](https://img.shields.io/badge/F1Score-90.27%25-blue.svg)
 NB
 ![Accuracy: 85.6%](https://img.shields.io/badge/Accuracy-85.6%25-blue.svg)
