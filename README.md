@@ -15,7 +15,8 @@ pip install -r requirements.txt
 ## Approaches
 
 ### Opinion Spam Dataset:
-Folder: OpinionSpam
+
+<b>Folder: OpinionSpam</b>
 
 1. Parameters: NGram Approach 
 Classifiers: SVM, NB, Random Forest 
@@ -87,7 +88,7 @@ Random Forest
 ![Accuracy: 71%](https://img.shields.io/badge/Accuracy-71%25-blue.svg)
 <br/>
 
-Folder: RealLife
+<b>Folder: RealLife</b>
 
 1. Classifiers: SVM, NB
 ```
@@ -156,4 +157,12 @@ Random Forest
 <br/>
 ![F1Score: 40%](https://img.shields.io/badge/F1Score-40%25-blue.svg)
 
+<br/>
+
+4. RNN
+```
+   To execute:
+      python3 RNN.py
+```
+![Accuracy: 57.9%](https://img.shields.io/badge/Accuracy-57.9%25-blue.svg)
 <br/>
