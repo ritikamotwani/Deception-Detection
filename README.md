@@ -24,14 +24,21 @@ Folder: OpinionSpam
       python3 Ngrams_And_Classifiers.py 
 ```
 SVM
+<br/>
 ![Accuracy: 91.25%](https://img.shields.io/badge/Accuracy-91.25%25-blue.svg)
 <br/>
 ![F1Score: 90.27%](https://img.shields.io/badge/F1Score-90.27%25-blue.svg)
+<br/>
 NB
+<br/>
 ![Accuracy: 85.6%](https://img.shields.io/badge/Accuracy-85.6%25-blue.svg)
+<br/>
 ![F1Score: 83.6%](https://img.shields.io/badge/F1Score-83.6%25-blue.svg)
+<br/>
 Random Forest
+<br/>
 ![Accuracy: 68.7%](https://img.shields.io/badge/Accuracy-68.7%25-blue.svg)
+<br/>
 ![F1Score: 62.1%](https://img.shields.io/badge/F1Score-62.1%25-blue.svg)
 <br/>
 
@@ -42,13 +49,21 @@ Random Forest
       python3 LIWC_And_Classifiers.py 
 ```
 NB
+<br/>
 ![Accuracy: 65.4%](https://img.shields.io/badge/Accuracy-65.4%25-blue.svg)
+<br/>
 ![F1Score: 71%](https://img.shields.io/badge/F1Score-71%25-blue.svg)
+<br/>
 SVM
+<br/>
 ![Accuracy: 79.1%](https://img.shields.io/badge/Accuracy-79.1%25-blue.svg)
+<br/>
 ![F1Score: 79.8%](https://img.shields.io/badge/F1Score-79.8%25-blue.svg)
+<br/>
 Random Forest
+<br/>
 ![Accuracy: 67.9%](https://img.shields.io/badge/Accuracy-67.9%25-blue.svg)
+<br/>
 ![F1Score: 59.6%](https://img.shields.io/badge/F1Score-59.6%25-blue.svg)
 
 <br/>
@@ -60,6 +75,7 @@ Random Forest
       python3 SVM_Ngrams_LIWC.py
 ```
 ![Accuracy: 84.4%](https://img.shields.io/badge/Accuracy-84.4%25-blue.svg)
+<br/>
 ![F1Score: 83.2%](https://img.shields.io/badge/F1Score-83.2%25-blue.svg)
 <br/>
 
