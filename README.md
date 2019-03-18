@@ -17,8 +17,8 @@ pip install -r requirements.txt
 ### Opinion Spam Dataset:
 Folder: OpinionSpam
 
-1. Parameters: NGram Approach
-   Classifiers: SVM, NB, Random Forest 
+1. Parameters: NGram Approach 
+Classifiers: SVM, NB, Random Forest 
 ```
    To execute:
       python3 Ngrams_And_Classifiers.py 
@@ -85,4 +85,75 @@ Random Forest
       python3 RNN
 ```
 ![Accuracy: 71%](https://img.shields.io/badge/Accuracy-71%25-blue.svg)
+<br/>
+
+Folder: RealLife
+
+1. Classifiers: SVM, NB
+```
+   To execute:
+      python3  Classifiers.py
+```
+SVM
+<br/>
+![Accuracy: 73.7%](https://img.shields.io/badge/Accuracy-73.7%25-blue.svg)
+<br/>
+![F1Score: 78.3%](https://img.shields.io/badge/F1Score-78.3%25-blue.svg)
+<br/>
+NB
+<br/>
+![Accuracy: 68.4%](https://img.shields.io/badge/Accuracy-68.4%25-blue.svg)
+<br/>
+![F1Score: 66.7%](https://img.shields.io/badge/F1Score-66.7%25-blue.svg)
+<br/>
+
+2. Parameters: NGram Approach 
+Classifiers: SVM, NB, Random Forest 
+```
+   To execute:
+      python3 Ngrams_And_Classifiers.py 
+```
+SVM
+<br/>
+![Accuracy: 76.9%](https://img.shields.io/badge/Accuracy-76.9%25-blue.svg)
+<br/>
+![F1Score: 80%](https://img.shields.io/badge/F1Score-80%25-blue.svg)
+<br/>
+NB
+<br/>
+![Accuracy: 69.2%](https://img.shields.io/badge/Accuracy-69.2%25-blue.svg)
+<br/>
+![F1Score: 71.4%](https://img.shields.io/badge/F1Score-71.4%25-blue.svg)
+<br/>
+Random Forest
+<br/>
+![Accuracy: 46.1%](https://img.shields.io/badge/Accuracy-46.1%25-blue.svg)
+<br/>
+![F1Score: 53.3%](https://img.shields.io/badge/F1Score-53.3%25-blue.svg)
+<br/>
+
+3.  Parameters: LIWC
+   Classifiers: SVM, NB, Random Forest
+```
+   To execute:
+      python3 LIWC_And_Classifiers.py 
+```
+NB
+<br/>
+![Accuracy: 63.1%](https://img.shields.io/badge/Accuracy-63.1%25-blue.svg)
+<br/>
+![F1Score: 70.99%](https://img.shields.io/badge/F1Score-70.99%25-blue.svg)
+<br/>
+SVM
+<br/>
+![Accuracy: 57.8%](https://img.shields.io/badge/Accuracy-57.8%25-blue.svg)
+<br/>
+![F1Score: 60%](https://img.shields.io/badge/F1Score-60%25-blue.svg)
+<br/>
+Random Forest
+<br/>
+![Accuracy: 52.6%](https://img.shields.io/badge/Accuracy-52.6%25-blue.svg)
+<br/>
+![F1Score: 40%](https://img.shields.io/badge/F1Score-40%25-blue.svg)
+
 <br/>
