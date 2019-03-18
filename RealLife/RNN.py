@@ -3,7 +3,7 @@ import gensim
 from gensim import utils
 from gensim import corpora,models
 # numpy
-import numpy
+import numpy as np
 # classifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 import os
@@ -21,37 +21,27 @@ from keras.preprocessing import sequence
 from keras.utils import to_categorical
 from keras.callbacks import EarlyStopping
 from keras.layers import LSTM, Activation, Dense, Dropout, Input, Embedding
+from utilities import read_fileNames, readFilesFromSources
 
 
 #create source
 sources = []
-labels = []
+datapath = './Real_Life_Trial_Data/'
 
-trainingPath = './dataset1/'
-for home, dirs, files in os.walk(trainingPath+'deceptive1'):
-    for filename in files:
-        sources.append(home+'/'+filename)
-        labels.append(1)
+#read file names from datapath
+read_fileNames(sources, datapath,'Deceptive')
+deceptiveCount=len(sources)
+read_fileNames(sources, datapath,'Truthful')
+truthCount=len(sources)-deceptiveCount
 
-for home, dirs, files in os.walk(trainingPath+'deceptive2'):
-    for filename in files:
-        sources.append(home+'/'+filename)
-        labels.append(1)
-
-for home, dirs, files in os.walk(trainingPath+'truthful1'):
-    for filename in files:
-        sources.append(home+'/'+filename)
-        labels.append(0)
-
-for home, dirs, files in os.walk(trainingPath+'truthful2'):
-    for filename in files:
-        sources.append(home + '/' + filename)
-        labels.append(0)
-
+#read text files from source list
 text = []
-for source in sources:
-    with open(source) as f_input:
-        text.append(f_input.read())
+readFilesFromSources(text,sources)
+
+#create label array corresponding to text files
+labels=np.empty(len(sources))
+np.concatenate((np.ones(deceptiveCount, dtype=int),np.zeros(truthCount, dtype=int)),out=labels)
+
 
 # create a dataframe using texts and lables
 trainDF = pandas.DataFrame()
@@ -65,8 +55,8 @@ X_train,X_test,Y_train,Y_test = model_selection.train_test_split(trainDF['text']
 #Tokenize the data and convert the text to sequences.
 #Add padding to ensure that all the sequences have the same shape.
 #There are many ways of taking the max_len and here an arbitrary length of 150 is chosen.
-max_words = 5000
-max_len = 50
+max_words = 1000
+max_len = 150
 tok = Tokenizer(num_words=max_words)
 tok.fit_on_texts(X_train)
 sequences = tok.texts_to_sequences(X_train)
@@ -93,8 +83,8 @@ model.compile(loss='binary_crossentropy',optimizer=RMSprop(),metrics=['accuracy'
 
 
 #Fit on the training data.
-model.fit(sequences_matrix,Y_train,batch_size=128,epochs=6,
-          validation_split=0.2,callbacks=[EarlyStopping(monitor='val_loss',min_delta=0.0001)])
+model.fit(sequences_matrix,Y_train,batch_size=128,epochs=100,
+          validation_split=0.2,callbacks=[EarlyStopping(monitor='val_loss',min_delta=0.0000001)])
 
 #Process the test data
 test_sequences = tok.texts_to_sequences(X_test)

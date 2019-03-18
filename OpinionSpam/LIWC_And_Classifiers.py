@@ -5,11 +5,11 @@ from sklearn.model_selection import KFold
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from utilities import train_model
+from sklearn.ensemble import RandomForestClassifier
 
 #Read LIWC output file
 
-df = pd.read_csv("./LIWC_output_data/LIWC2015_AllReviews.csv")
-# df = pd.read_csv("./LIWC_output_data/LIWC_RealLife.csv")
+df = pd.read_csv("./Spam_Detection_Data/LIWC2015_AllReviews.csv")
 
 #split training and testing data
 x_train, x_test, y_train, y_test = model_selection.train_test_split(df.iloc[:,2:-1],df.iloc[:,-1], test_size=0.15, random_state=0)
@@ -17,6 +17,7 @@ x_train, x_test, y_train, y_test = model_selection.train_test_split(df.iloc[:,2:
 # Define classifiers
 classifier1=GaussianNB()
 classifier2=SVC(kernel='linear')
+classifier3 = RandomForestClassifier(n_estimators=2, random_state=0, max_features='auto', min_samples_split=2)
 
 #K-Fold cross validation on training set
 k=5
@@ -35,6 +36,9 @@ for train_index, valid_index in kf.split(x_train):
     result2=train_model(classifier2,training_data,y_train.iloc[train_index], valid_data, expected_labels)   
     print("SVM result : ",result2)
 
+    result3=train_model(classifier3, training_data, y_train.iloc[train_index], valid_data, expected_labels)   
+    print("Random Forest result : ",result3)
+
 
 #Final classification
 print("Train-test classification...\n")
@@ -42,3 +46,5 @@ result1=train_model(classifier1,x_train, y_train, x_test, y_test)
 print("NB result : ",result1)
 result2=train_model(classifier2,x_train, y_train, x_test, y_test)
 print("SVM result : ",result2)
+result3=train_model(classifier3,x_train, y_train, x_test, y_test)
+print("Random Forest result : ",result3)

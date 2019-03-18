@@ -69,7 +69,7 @@ text=[]
 readFilesFromSources(text,sources)
 
 #read stopwords file
-with open('./stopwords.txt') as f_stop:
+with open('./Spam_Detection_Data/stopwords.txt') as f_stop:
         stopwords=f_stop.read().splitlines()
 
 #encode Deceptive/Truthful Class labels

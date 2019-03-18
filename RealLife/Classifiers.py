@@ -2,7 +2,7 @@ import os,string
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn import model_selection, preprocessing, naive_bayes
+from sklearn import model_selection, preprocessing, naive_bayes, svm
 from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
 from scipy.sparse import csr_matrix
@@ -52,32 +52,10 @@ xvalid_count =  count_vect.transform(valid_x)
 tfidf_vect = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', max_features=5000)
 tfidf_vect.fit(trainDF['text'])
 xtrain_tfidf =  tfidf_vect.transform(train_x)
-xvalid_tfidf =  tfidf_vect.transform(valid_x)
-
-# ngram level tf-idf 
-tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(1,2), max_features=5000)
-tfidf_vect_ngram.fit(trainDF['text'])
-xtrain_tfidf_ngram =  tfidf_vect_ngram.transform(train_x)
-xvalid_tfidf_ngram =  tfidf_vect_ngram.transform(valid_x)
-
-# characters level tf-idf
-tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(1,2), max_features=5000)
-tfidf_vect_ngram_chars.fit(trainDF['text'])
-xtrain_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(train_x) 
-xvalid_tfidf_ngram_chars =  tfidf_vect_ngram_chars.transform(valid_x) 
-
-# Naive Bayes on Count Vectors
-result = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count, valid_y)
-print("NB, Count Vectors: Accuracy=%.3f\tF1=%.3f"%(result['accuracy'],result['f1']))
+xvalid_tfidf =  tfidf_vect.transform(valid_x) 
 
 # Naive Bayes on Word Level TF IDF Vectors
 result = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf, train_y, xvalid_tfidf, valid_y)
 print("NB, WordLevel TF-IDF: Accuracy=%.3f\tF1=%.3f"%(result['accuracy'],result['f1']))
-
-# Naive Bayes on Ngram Level TF IDF Vectors
-result = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
-print("NB, N-Gram Vectors: Accuracy=%.3f\tF1=%.3f"%(result['accuracy'],result['f1']))
-
-# Naive Bayes on Character Level TF IDF Vectors
-result = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars, valid_y)
-print("NB, CharLevel Vectors: Accuracy=%.3f\tF1=%.3f"%(result['accuracy'],result['f1']))
+result1 = train_model(svm.SVC(kernel="linear"), xtrain_tfidf, train_y, xvalid_tfidf, valid_y)
+print("SVM, WordLevel TF-IDF: Accuracy=%.3f\tF1=%.3f"%(result1['accuracy'],result1['f1']))
