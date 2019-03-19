@@ -11,71 +11,24 @@ from sklearn.model_selection import cross_validate
 from sklearn.model_selection import KFold
 from scipy.sparse import csr_matrix
 from statistics import mean
+from input import *
 from utilities import *
 
 #--------------------------------Opinion Spam Data----------------------------------------------------------------------------------------------
 
-# sources = [[] for i in range(4)]
-
-# datapath='./Spam_Detection_Data/'
-# sources = [[] for i in range(4)]
-
-# read_fileNames(sources[0], datapath,'deceptive_neg')
-# read_fileNames(sources[1], datapath,'truthful_neg')
-# read_fileNames(sources[2], datapath,'deceptive_pos')
-# read_fileNames(sources[3], datapath,'truthful_pos')
-
-# sort_Lists(sources,len(sources))
-
-# df=[]
-
-# read_sort_CSV(df, datapath, 'LIWC_Negative_Deceptive.csv','Filename')
-# read_sort_CSV(df, datapath, 'LIWC_Negative_Truthful.csv','Filename')
-# read_sort_CSV(df, datapath, 'LIWC_Positive_Deceptive.csv','Filename')
-# read_sort_CSV(df, datapath, 'LIWC_Positive_Truthful.csv','Filename')
-
-
-# dfLIWC=pd.concat((df[0],df[1],df[2],df[3])).iloc[:,2:]
-
-# labels=np.empty((len(sources)*len(sources[0])),dtype=int)
-# np.concatenate((np.ones((400),dtype=int),np.zeros((400),dtype=int),np.ones((400),dtype=int),np.zeros((400),dtype=int)),out=labels)
+text,labels=readTxt_Spam()
+dfLIWC=readLIWC_Spam()
 
 #--------------------------------Real-Life Data----------------------------------------------------------------------------------------------
 
-#create source
-sources = [[] for i in range(2)]
-datapath = './Real_Life_Trial_Data/'
-
-#read file names from datapath
-read_fileNames(sources[0], datapath,'Deceptive')
-read_fileNames(sources[1], datapath,'Truthful')
-
-#sort filenames
-sort_Lists(sources,len(sources))
-
-#read LIWC output CSV files
-df=[]
-read_sort_CSV(df, datapath, 'LIWC2015_Deceptive.csv','Filename')
-read_sort_CSV(df, datapath, 'LIWC2015_Truthful.csv','Filename')
-
-dfLIWC=pd.concat((df[0],df[1])).iloc[:,2:]
-
-#create label array corresponding to text files
-labels=np.concatenate((np.ones(len(sources[0]), dtype=int),np.zeros(len(sources[1]), dtype=int)))
+# text,labels=readTxt_RealLife()
+# dfLIWC=readLIWC_RealLife()
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
-
-#read text files from source list
-text=[]
-readFilesFromSources(text,sources)
 
 #read stopwords file
 with open('./stopwords.txt') as f_stop:
         stopwords=f_stop.read().splitlines()
-
-#encode Deceptive/Truthful Class labels
-encoder = preprocessing.LabelEncoder()
-labels=encoder.fit_transform(labels)
 
 #normalize LIWC input
 dfLIWC=normalize(dfLIWC,norm='l2')
@@ -83,7 +36,7 @@ dfLIWC=normalize(dfLIWC,norm='l2')
 #train-test split
 train_txt, valid_txt, train_LIWC, valid_LIWC, train_labels, valid_labels= model_selection.train_test_split(text, dfLIWC, labels, test_size = 0.10, random_state = 0)
 
-i=2000
+i=1600
 print("Max features = %d\n"%i)
 #extract N-gram features from text
 xtrain_tfidf_ngram, xvalid_tfidf_ngram = ngram_transform(train_txt, valid_txt, 2, stopwords,i)
@@ -107,4 +60,4 @@ clf=svm.SVC(kernel='linear')
 # Final classification
 print("Classifying test data using SVM...")
 result = train_model(clf, train_X, train_labels, valid_X, valid_labels)
-print("Accuracy score = %.3f\nF1 score = %.3f"%(result['accuracy'],result['f1']))
+print("Accuracy score = %.4f\nF1 score = %.4f"%(result['accuracy'],result['f1']))
