@@ -21,8 +21,7 @@ def read_sort_CSV(df, datapath, filename, sort_column):
     df[index]=df[index].sort_values(by=sort_column)
 
 def readFilesFromSources(text, sources):
-    if np.asarray(sources).ndim>1:
-        sources=list(itertools.chain.from_iterable(sources))
+    sources=list(itertools.chain.from_iterable(sources))
     for source in sources:
         with open(source) as f_input:
             text.append(f_input.read())
