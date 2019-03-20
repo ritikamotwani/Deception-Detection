@@ -18,17 +18,20 @@ from utilities import *
 
 text,labels=readTxt_Spam()
 dfLIWC=readLIWC_Spam()
-
+i=1600
 #--------------------------------Real-Life Data----------------------------------------------------------------------------------------------
 
 # text,labels=readTxt_RealLife()
 # dfLIWC=readLIWC_RealLife()
-
+# i=2000
 #--------------------------------------------------------------------------------------------------------------------------------------------
 
 #read stopwords file
 with open('./stopwords.txt') as f_stop:
         stopwords=f_stop.read().splitlines()
+
+# stemming of dataset
+# text=stemText(text)
 
 #normalize LIWC input
 dfLIWC=normalize(dfLIWC,norm='l2')
@@ -36,7 +39,7 @@ dfLIWC=normalize(dfLIWC,norm='l2')
 #train-test split
 train_txt, valid_txt, train_LIWC, valid_LIWC, train_labels, valid_labels= model_selection.train_test_split(text, dfLIWC, labels, test_size = 0.10, random_state = 0)
 
-i=1600
+
 print("Max features = %d\n"%i)
 #extract N-gram features from text
 xtrain_tfidf_ngram, xvalid_tfidf_ngram = ngram_transform(train_txt, valid_txt, 2, stopwords,i)

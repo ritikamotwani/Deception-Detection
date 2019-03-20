@@ -5,6 +5,8 @@ import itertools
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
 from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk import PorterStemmer
+from nltk.tokenize import word_tokenize, sent_tokenize
 
 def read_fileNames(src, datapath, subfolder=None):
     for home, dirs, files in os.walk(datapath+subfolder):
@@ -41,3 +43,23 @@ def train_model(classifier, feature_vector_train, train_label, feature_vector_va
     predictions = classifier.predict(feature_vector_valid)
 
     return {'accuracy':accuracy_score(predictions, valid_label),'f1':f1_score(predictions, valid_label)}
+
+def stemSentence(sentence, porter):
+    token_words=word_tokenize(sentence)
+    stem_sentence=[]
+    for word in token_words:
+        stem_sentence.append(porter.stem(word))
+        stem_sentence.append(" ")
+    return "".join(stem_sentence)
+
+def stemDoc(doc,porter):
+    token_sentences=sent_tokenize(doc)
+    for j in range(len(token_sentences)):
+        token_sentences[j]=stemSentence(token_sentences[j],porter)
+    return "".join(token_sentences)
+    
+def stemText(text):
+    porter=PorterStemmer()
+    for i in range(len(text)):
+        text[i]=stemDoc(text[i],porter)
+    return text
