@@ -1,40 +1,34 @@
 import numpy as np
 import os
 import pandas as pd
+from sklearn import model_selection
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import make_scorer, accuracy_score
 from sklearn.model_selection import GridSearchCV
+from input import *
 
-labels = []
+#--------------------------------Opinion Spam Data----------------------------------------------------------------------------------------------
 
-trainingPath = './dataset1/'
-for home, dirs, files in os.walk(trainingPath+'deceptive1'):
-    for filename in files:
-        labels.append(1)
+text,labels=readTxt_Spam()
+i=3200
+#--------------------------------Real-Life Data----------------------------------------------------------------------------------------------
 
-for home, dirs, files in os.walk(trainingPath+'deceptive2'):
-    for filename in files:
-        labels.append(1)
+# text,labels=readTxt_RealLife()
+# dfLIWC=readLIWC_RealLife()
+# i=2000
+#--------------------------------------------------------------------------------------------------------------------------------------------
+#read stopwords file
+with open('./stopwords.txt') as f_stop:
+        stopwords=f_stop.read().splitlines()
 
-for home, dirs, files in os.walk(trainingPath+'truthful1'):
-    for filename in files:
-        labels.append(0)
-
-for home, dirs, files in os.walk(trainingPath+'truthful2'):
-    for filename in files:
-        labels.append(0)
+#train-test split
+train_txt, valid_txt, train_labels, valid_labels= model_selection.train_test_split(text, labels, test_size = 0.10, random_state = 0)
 
 
-data1 = pd.read_csv('deceptive1.csv', index_col=0)
-data2 = pd.read_csv('deceptive2.csv', index_col=0)
-data3 = pd.read_csv('truthful1.csv', index_col=0)
-data4 = pd.read_csv('truthful2.csv', index_col=0)
-frames = [data1, data2, data3, data4]
-data = pd.concat(frames)
-
-num_test = 0.20
-X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=num_test, random_state=0)
+print("Max features = %d\n"%i)
+#extract N-gram features from text
+xtrain_tfidf_ngram, xvalid_tfidf_ngram = ngram_transform(train_txt, valid_txt, 2, stopwords,i)
 
 # Choose the type of classifier. 
 clf = RandomForestClassifier()
@@ -53,15 +47,13 @@ acc_scorer = make_scorer(accuracy_score)
 
 # Run the grid search
 grid_obj = GridSearchCV(clf, parameters, scoring=acc_scorer)
-grid_obj = grid_obj.fit(X_train, y_train)
+grid_obj = grid_obj.fit(xtrain_tfidf_ngram, train_labels)
 
 # Set the clf to the best combination of parameters
 clf = grid_obj.best_estimator_
 
 # Fit the best algorithm to the data. 
-clf.fit(X_train, y_train)
+clf.fit(xtrain_tfidf_ngram, train_labels)
 
-
-
-predictions = clf.predict(X_test)
-print(accuracy_score(y_test, predictions))
+predictions = clf.predict(xvalid_tfidf_ngram)
+print(accuracy_score(valid_labels, predictions))
